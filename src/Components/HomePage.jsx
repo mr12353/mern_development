@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Signup from "../SignUp";
 import './HomePage.css';
 
 
@@ -83,8 +82,7 @@ const personalData = [{
 
 ];
 
-const HomePage = () => {
-    const [isLoggedout, setIsLoggedout] = useState(false);
+const HomePage = ({ user, onLogout }) => {
     const [showForm, setShowForm] = useState(false);
     const [userData, setUserData] = useState({
         name: "",
@@ -99,81 +97,76 @@ const HomePage = () => {
         ...userData,
         name: e.target.value
     })
-        console.log("name",userData.name);
-        console.log("value", e.target.value);
 }
 
 const handleSubmit = (e) => {
     e.preventDefault();
-    
+    setShowForm(true);
 }
 
     return (
-        isLoggedout ? (<Signup />) : (
-            <div>
-                <h2> This is Home Page</h2>
-                <div className = "personal-data-container">
-                        <h2 className = "personal-data-header"> Personal Data </h2>
-                <div >
-                    <table className = "personal-data-table-container">
-                        <thead>
-                            <tr>
-                                <td> ID </td>
-                                <td> Name </td>
-                                <td> Email </td>
-                                <td> Phone </td>
-                                <td> Address </td>
-                                <td> Action </td>
+        <div>
+            <h2> This is Home Page</h2>
+            <div className = "personal-data-container">
+                    <h2 className = "personal-data-header"> Personal Data </h2>
+            <div >
+                <table className = "personal-data-table-container">
+                    <thead>
+                        <tr>
+                            <td> ID </td>
+                            <td> Name </td>
+                            <td> Email </td>
+                            <td> Phone </td>
+                            <td> Address </td>
+                            <td> Action </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {personalData.map((person) => (
+                            <tr key={person.id}>
+                                <td>{person.id}</td>
+                                <td>{person.Name}</td>
+                                <td>{person.EmailId}</td>
+                                <td>{person.phoneNo}</td>
+                                <td>{person.address}</td>
+                                <button> Delete </button>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {personalData.map((person) => (
-                                <tr key={person.id}>
-                                    <td>{person.id}</td>
-                                    <td>{person.Name}</td>
-                                    <td>{person.EmailId}</td>
-                                    <td>{person.phoneNo}</td>
-                                    <td>{person.address}</td>
-                                    <button> Delete </button>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-                </div> 
-                <div> 
-                    <button onClick= {() => setShowForm(true)}> Add New Data </button>
-                </div> <hr />
-                
-                <form className="personal-data-form">
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            </div> 
+            <div> 
+                <button onClick= {() => setShowForm(true)}> Add New Data </button>
+            </div> <hr />
+            {showForm && (
+                <form className="personal-data-form" onSubmit={handleSubmit}>
                     <h2 className="form-details-header"> Enter the Details</h2>
                     <div className="form-input-container">
-                    <label>Name:</label>
-                    <input type = "text" placeholder = "Enter Name" name = "name"  value={userData.name} onChange = {handleChange} />
+                        <label>Name:</label>
+                        <input type = "text" placeholder = "Enter Name" name = "name"  value={userData.name} onChange = {handleChange} />
                     </div>
-                    <div>
-                    <label>Email:</label>
-                    <input type = "email" placeholder = "Enter Email" name = "email" value={userData.email} onChange = {handleChange} />
-                    </div>
-                    <div>
-                    <label>Phone Number:</label>
-                    <input type = "text" placeholder = "Enter Phone Number" name = "phoneNo" value={userData.phoneNo} onChange = {handleChange} />
-                    </div>
-                    <div>
-                    <label>Address:</label>
-                    <input type = "text" placeholder = "Enter Address" name = "address" value={userData.address} onChange = {handleChange} />
-                    </div>
-                    <div>
-                        <button type="submit"> Submit </button>
-                    </div>
+                <div>
+                <label>Email:</label>
+                <input type = "email" placeholder = "Enter Email" name = "email" value={userData.email} onChange = {handleChange} />
+                </div>
+                <div>
+                <label>Phone Number:</label>
+                <input type = "text" placeholder = "Enter Phone Number" name = "phoneNo" value={userData.phoneNo} onChange = {handleChange} />
+                </div>
+                <div>
+                <label>Address:</label>
+                <input type = "text" placeholder = "Enter Address" name = "address" value={userData.address} onChange = {handleChange} />
+                </div>
+                <div>
+                    <button type="submit"> Submit </button>
+                </div>
 
-                </form> <hr />
-                
-                <button className ="logout" onClick={() => {
-                    localStorage.removeItem("user");
-                    setIsLoggedout(true);
-                }}> Logout </button>
-            </div>)
+            </form> )}
+            <hr />
+            
+            <button className ="logout" onClick={onLogout}> Logout </button>
+        </div>
     )
 }
 

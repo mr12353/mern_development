@@ -1,33 +1,28 @@
 import { useState } from "react";
-import HomePage from "./Components/HomePage";
 
-function Login() {
+function Login({ user, onLogin }) {
   const [username, setUsername] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleLogin = () => {
-    const storedUsername = localStorage.getItem("user");
-
-    if (storedUsername === username) {
-      alert("Login Successful");
-      setIsLoggedIn(true);
+    if (username === user) {
+      // alert("Login Successful");
+      onLogin(username);
     } else {
       alert("Invalid Username");
     }
   };
 
   return (
-    isLoggedIn ? (<HomePage />) : (
-        <div>
-        <h2>Login</h2>
-        <input
+    <div>
+      <h2>Login</h2>
+      <input
         type="text"
         placeholder="Enter username"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
-        />
-        <button onClick={handleLogin}>Login</button>
-        </div>)
+      />
+      <button onClick={handleLogin}>Login</button>
+    </div>
   );
 }
 

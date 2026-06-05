@@ -1,24 +1,19 @@
 import { useState } from "react";
-import Login from "./Login";
 
-function Signup() {
+function Signup({ onSignup }) {
   const [username, setUsername] = useState("");
-  const [isSignedUp, setIsSignedUp] = useState(false);
 
   const handleSignup = () => {
     if(username === ""){
         alert("Username cannot be empty");
-    }else {
-        localStorage.setItem("user", username);
-        alert("Signup successful");
+    } else {
+        // alert("Signup successful");
+        onSignup(username);
         setUsername("");
-        setIsSignedUp(true);
     }
   };
 
-
   return (
-    isSignedUp ? (<Login />) : (
     <div>
       <h2>Signup</h2>
       <input
@@ -28,7 +23,7 @@ function Signup() {
         onChange={(e) => setUsername(e.target.value)}
       />
       <button onClick={handleSignup}>Signup</button>
-    </div>)
+    </div>
   );
 }
 
