@@ -93,79 +93,91 @@ const HomePage = ({ user, onLogout }) => {
 
     const handleChange = (e) => {
         e.preventDefault();
-    setUserData({
-        ...userData,
-        name: e.target.value
-    })
-}
+        setUserData({
+            ...userData,
+            [e.target.name]: e.target.value
+        })
+    }
 
-const handleSubmit = (e) => {
-    e.preventDefault();
-    setShowForm(true);
-}
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setShowForm(true);
+    }
+
+    const handleHide = (e) => {
+        e.preventDefault();
+        console.log(e);
+        setUserData({
+            name: "",
+            email: "",
+            phoneNo: "",
+            address: ""
+        });
+        setShowForm(false);
+    }
 
     return (
         <div>
             <h2> This is Home Page</h2>
-            <div className = "personal-data-container">
-                    <h2 className = "personal-data-header"> Personal Data </h2>
-            <div >
-                <table className = "personal-data-table-container">
-                    <thead>
-                        <tr>
-                            <td> ID </td>
-                            <td> Name </td>
-                            <td> Email </td>
-                            <td> Phone </td>
-                            <td> Address </td>
-                            <td> Action </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {personalData.map((person) => (
-                            <tr key={person.id}>
-                                <td>{person.id}</td>
-                                <td>{person.Name}</td>
-                                <td>{person.EmailId}</td>
-                                <td>{person.phoneNo}</td>
-                                <td>{person.address}</td>
-                                <button> Delete </button>
+            <div className="personal-data-container">
+                <h2 className="personal-data-header"> Personal Data </h2>
+                <div >
+                    <table className="personal-data-table-container">
+                        <thead>
+                            <tr>
+                                <td> ID </td>
+                                <td> Name </td>
+                                <td> Email </td>
+                                <td> Phone </td>
+                                <td> Address </td>
+                                <td> Action </td>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {personalData.map((person) => (
+                                <tr key={person.id}>
+                                    <td>{person.id}</td>
+                                    <td>{person.Name}</td>
+                                    <td>{person.EmailId}</td>
+                                    <td>{person.phoneNo}</td>
+                                    <td>{person.address}</td>
+                                    <button> Delete </button>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            </div> 
-            <div> 
-                <button onClick= {() => setShowForm(true)}> Add New Data </button>
+            <div>
+                <button onClick={() => setShowForm(true)}> Add New Data </button>
             </div> <hr />
             {showForm && (
                 <form className="personal-data-form" onSubmit={handleSubmit}>
                     <h2 className="form-details-header"> Enter the Details</h2>
                     <div className="form-input-container">
                         <label>Name:</label>
-                        <input type = "text" placeholder = "Enter Name" name = "name"  value={userData.name} onChange = {handleChange} />
+                        <input type="text" placeholder="Enter Name" name="name" value={userData.name} onChange={handleChange} />
                     </div>
-                <div>
-                <label>Email:</label>
-                <input type = "email" placeholder = "Enter Email" name = "email" value={userData.email} onChange = {handleChange} />
-                </div>
-                <div>
-                <label>Phone Number:</label>
-                <input type = "text" placeholder = "Enter Phone Number" name = "phoneNo" value={userData.phoneNo} onChange = {handleChange} />
-                </div>
-                <div>
-                <label>Address:</label>
-                <input type = "text" placeholder = "Enter Address" name = "address" value={userData.address} onChange = {handleChange} />
-                </div>
-                <div>
-                    <button type="submit"> Submit </button>
-                </div>
+                    <div>
+                        <label>Email:</label>
+                        <input type="text" placeholder="Enter Email" name="email" value={userData.email} onChange={handleChange} />
+                    </div>
+                    <div>
+                        <label>Phone Number:</label>
+                        <input type="number" placeholder="Enter Phone Number" name="phoneNo" value={userData.phoneNo} onChange={handleChange} />
+                    </div>
+                    <div>
+                        <label>Address:</label>
+                        <input type="text" placeholder="Enter Address" name="address" value={userData.address} onChange={handleChange} />
+                    </div>
+                    <div>
+                        <button type="submit" onClick={handleHide}> Submit </button>
+                    </div>
 
-            </form> )}
+                </form>)}
             <hr />
-            
-            <button className ="logout" onClick={onLogout}> Logout </button>
+
+            <button className="logout" onClick={onLogout}> Logout </button>
         </div>
     )
 }
