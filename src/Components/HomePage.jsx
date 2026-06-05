@@ -85,6 +85,7 @@ const personalData = [{
 
 const HomePage = () => {
     const [isLoggedout, setIsLoggedout] = useState(false);
+    const [showForm, setShowForm] = useState(false);
     const [userData, setUserData] = useState({
         name: "",
         email: "",
@@ -94,25 +95,27 @@ const HomePage = () => {
 
     const handleChange = (e) => {
         e.preventDefault();
-        console.log("name",userData.name);
-        console.log("value", e.target.value);
-        
     setUserData({
         ...userData,
         name: e.target.value
     })
+        console.log("name",userData.name);
+        console.log("value", e.target.value);
 }
 
+const handleSubmit = (e) => {
+    e.preventDefault();
+    
+}
 
     return (
         isLoggedout ? (<Signup />) : (
             <div>
                 <h2> This is Home Page</h2>
-                    <div className="personal-data-header">
-                        <h3> Personal Data </h3>
-                    </div>
-                <div className="personal-data">
-                    <table>
+                <div className = "personal-data-container">
+                        <h2 className = "personal-data-header"> Personal Data </h2>
+                <div >
+                    <table className = "personal-data-table-container">
                         <thead>
                             <tr>
                                 <td> ID </td>
@@ -136,11 +139,15 @@ const HomePage = () => {
                             ))}
                         </tbody>
                     </table>
+                </div>
+                </div> 
+                <div> 
+                    <button onClick= {() => setShowForm(true)}> Add New Data </button>
                 </div> <hr />
                 
-                <form>
-                    <h2> Enter the Details</h2>
-                    <div>
+                <form className="personal-data-form">
+                    <h2 className="form-details-header"> Enter the Details</h2>
+                    <div className="form-input-container">
                     <label>Name:</label>
                     <input type = "text" placeholder = "Enter Name" name = "name"  value={userData.name} onChange = {handleChange} />
                     </div>
@@ -156,10 +163,13 @@ const HomePage = () => {
                     <label>Address:</label>
                     <input type = "text" placeholder = "Enter Address" name = "address" value={userData.address} onChange = {handleChange} />
                     </div>
+                    <div>
+                        <button type="submit"> Submit </button>
+                    </div>
 
                 </form> <hr />
-
-                <button onClick={() => {
+                
+                <button className ="logout" onClick={() => {
                     localStorage.removeItem("user");
                     setIsLoggedout(true);
                 }}> Logout </button>
