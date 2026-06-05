@@ -84,8 +84,6 @@ const personalData = [{
 ];
 
 const HomePage = () => {
-
-
     const [isLoggedout, setIsLoggedout] = useState(false);
     const [userData, setUserData] = useState({
         name: "",
