@@ -113,15 +113,18 @@ const HomePage = ({ user, onLogout }) => {
             emailId: formData.emailId,
             phoneNo: formData.phoneNo,
             address: formData.address
-        }]);
-
-        setFormData({
-            name: "",
-            emailId: "",
-            phoneNo: "",
-            address: ""
-        });
-        setShowForm(false);
+        }]
+    );
+    
+    setFormData({
+        name: "",
+        emailId: "",
+        phoneNo: "",
+        address: ""
+    });
+    
+    setShowtable(false);
+    setShowForm(false);
     }
 
     const handleDelete =(id)=>{
@@ -161,9 +164,14 @@ const HomePage = ({ user, onLogout }) => {
                     </table>
                 </div>
             </div>)}
-            <div>
-                <button className = "add-data-button" onClick={() => setShowForm(!showForm)}> Add New Data </button>
-            </div> <hr />
+
+            {!showForm && (<div>
+             <button className = "add-data-button" onClick={() => {
+                    setShowForm(!showForm);
+                    setShowtable(!showtable);
+                }}> Add New Data </button> 
+            </div> )}
+             <hr />
            {showForm && (
                 <form className="personal-data-form" onSubmit={handleSubmit}>
                     <h2 className="form-details-header"> Enter the Details</h2>
