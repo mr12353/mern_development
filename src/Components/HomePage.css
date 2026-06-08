@@ -43,3 +43,9 @@
     border-radius: 4px;
     cursor: pointer;
 }
+.add-data-button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
