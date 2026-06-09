@@ -108,7 +108,7 @@ const HomePage = ({ user, onLogout }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         setUserData([...userData, {
-            id: userData.length + 1,
+            id: userData[userData.length - 1].id + 1,
             name: formData.name,
             emailId: formData.emailId,
             phoneNo: formData.phoneNo,
@@ -122,7 +122,7 @@ const HomePage = ({ user, onLogout }) => {
         phoneNo: "",
         address: ""
     });
-    
+
     setShowtable(false);
     setShowForm(false);
     }
