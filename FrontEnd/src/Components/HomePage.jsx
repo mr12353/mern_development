@@ -85,27 +85,50 @@ import './HomePage.css';
 const HomePage = ({ user, onLogout }) => {
     const [showForm, setShowForm] = useState(false);
     const [showtable, setShowtable] = useState(false);
-    const [userData, setUserData] = useState([]);
+    // const [userData, setUserData] = useState([]);
     const [apiData, setApiData] = useState([]);
     const [formData, setFormData] = useState({
         name: "",
         emailId: "",
         phoneNo: "",
-        address: ""  
+        address: ""
     });
-console.log("apidata", apiData);
 
-    useEffect(()=>{
-        setApiData(apiData);
-        console.log("apidata1", apiData);
+
+    const getApiData = async () => {
+        try {
+            await fetch('http://localhost:8000/api/personalData')
+                .then(response => response.json())
+                .then(data => setApiData(data))
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const deleteUser = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:8000/users/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete');
+            }
+
+            const data = await response.json();
+            getApiData();
+            console.log(data);
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        getApiData();
     }, [])
 
-    useEffect(()=>{
-        fetch('http://localhost:8000/api/personalData')
-        .then(response => response.json())
-        .then(data => setApiData(data)) 
-        .catch(error => console.error(error));
-    },[])
+    console.log("apidata1", apiData[0]);
 
     const handleChange = (e) => {
         e.preventDefault();
@@ -113,6 +136,22 @@ console.log("apidata", apiData);
             ...formData,
             [e.target.name]: e.target.value
         })
+    }
+
+    const addUses = async (e) => {
+        try {
+            const response = await fetch('http://localhost:8000/users/addUserData', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(res => res.json())
+                .then(data => console.log(data));
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     const handleSubmit = (e) => {
@@ -124,66 +163,66 @@ console.log("apidata", apiData);
             phoneNo: formData.phoneNo,
             address: formData.address
         }]
-    );
-    
-    setFormData({
-        name: "",
-        emailId: "",
-        phoneNo: "",
-        address: ""
-    });
+        );
 
-    setShowtable(false);
-    setShowForm(false);
+        setFormData({
+            name: "",
+            emailId: "",
+            phoneNo: "",
+            address: ""
+        });
+
+        setShowtable(false);
+        setShowForm(false);
     }
 
-    const handleDelete =(id)=>{
-        setApiData(previousdata => previousdata.filter(user => user.id !== id));
-    }
+    // const handleDelete =(id)=>{
+    //     setApiData(previousdata => previousdata.filter(user => user.id !== id));
+    // }
 
     return (
         <div>
-            <h2> This is Home Page {apiData.message} </h2>
+            <h2> This is Home Page </h2>
             {!showtable && (
-            <div className="personal-data-container">
-                <h2 className="personal-data-header"> Personal Data </h2>
-                <div >
-                    <table className="personal-data-table-container">
-                        <thead>
-                            <tr>
-                                <td> ID </td>
-                                <td> Name </td>
-                                <td> EmailId </td>
-                                <td> Phone </td>
-                                <td> Address </td>
-                                <td> Action </td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {apiData.map((person) => (
-                                <tr key={person.id}>
-                                    <td>{person.id}</td>
-                                    <td>{person.name}</td>
-                                    <td>{person.emailId}</td>
-                                    <td>{person.phoneNo}</td>
-                                    <td>{person.address}</td>
-                                    <button onClick = {() => handleDelete(person.id)}> Delete </button>
+                <div className="personal-data-container">
+                    <h2 className="personal-data-header"> Personal Data </h2>
+                    <div >
+                        <table className="personal-data-table-container">
+                            <thead>
+                                <tr>
+                                    <td> ID </td>
+                                    <td> Name </td>
+                                    <td> EmailId </td>
+                                    <td> Phone </td>
+                                    <td> Address </td>
+                                    <td> Action </td>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>)}
+                            </thead>
+                            <tbody>
+                                {apiData.map((person) => (
+                                    <tr key={person?.id}>
+                                        <td>{person?.id}</td>
+                                        <td>{person?.name}</td>
+                                        <td>{person?.emailId}</td>
+                                        <td>{person?.phoneNo}</td>
+                                        <td>{person?.address}</td>
+                                        <button onClick={() => deleteUser(person?.id)}> Delete </button>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>)}
 
             {!showForm && (<div>
-             <button className = "add-data-button" onClick={() => {
+                <button className="add-data-button" onClick={() => {
                     setShowForm(!showForm);
                     setShowtable(!showtable);
-                }}> Add New Data </button> 
-            </div> )}
-             <hr />
-           {showForm && (
-                <form className="personal-data-form" onSubmit={handleSubmit}>
+                }}> Add New Data </button>
+            </div>)}
+            <hr />
+            {showForm && (
+                <form className="personal-data-form" onSubmit={addUses}>
                     <h2 className="form-details-header"> Enter the Details</h2>
                     <div className="form-input-container">
                         <label>Name:</label>
@@ -206,7 +245,7 @@ console.log("apidata", apiData);
                     </div>
 
                 </form>
-           )}
+            )}
             <hr />
 
             <button className="logout" onClick={onLogout}> Logout </button>
