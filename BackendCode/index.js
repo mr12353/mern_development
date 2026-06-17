@@ -1,10 +1,36 @@
 const express = require("express");
 const cors = require("cors");
+const mongoose = require('mongoose');
+require('dotenv').config();
 
 const app = express();
 app.use(express.json());
 
 const PORT = 8000;
+
+// Connect to MongoDB with error handling
+mongoose.connect('mongodb+srv://mr12353_db_user:Ve5DNu4y4ujm7vpa@mernlearncluster.gcncwdi.mongodb.net/mernProjectData')
+.then(() => {
+  console.log("✓ MongoDB connected successfully");
+  // Start server only after DB connection
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+})
+.catch((err) => {
+  console.error("✗ MongoDB connection error:", err.message);
+  process.exit(1);
+});
+
+const userSchema = new mongoose.Schema({
+  name: String,
+  email: String
+});
+
+const User = mongoose.model("User", userSchema);
+
+
+
 
 let personalData = [
   {
@@ -117,6 +143,13 @@ app.post("/users/addUserData", (req, res) => {
   console.log("newUser",newUser);
   console.log("updatedUser",updatedUser);
 
+  const user = new User({
+  name: "John",
+  email: "john@example.com"
+});
+
+ user.save();
+
   personalData.push(updatedUser);
   res.json({
     success: true,
@@ -128,6 +161,3 @@ app.get("/", (req, res) => {
   res.send("Hello Express!");
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
