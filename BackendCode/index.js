@@ -7,9 +7,17 @@ const app = express();
 app.use(express.json());
 
 const PORT = 8000;
+const MONGO_URI = process.env.MONGO_URI;
+
+if (!MONGO_URI) {
+  console.error("MongoDB connection error: MONGO_URI is missing in .env");
+  process.exit(1);
+}
 
 // Connect to MongoDB with error handling
-mongoose.connect('mongodb+srv://mr12353_db_user:Ve5DNu4y4ujm7vpa@mernlearncluster.gcncwdi.mongodb.net/mernProjectData')
+mongoose.connect(MONGO_URI, {
+  serverSelectionTimeoutMS: 10000,
+})
 .then(() => {
   console.log("✓ MongoDB connected successfully");
   // Start server only after DB connection
