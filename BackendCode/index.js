@@ -32,7 +32,9 @@ mongoose.connect(MONGO_URI, {
 
 const userSchema = new mongoose.Schema({
   name: String,
-  email: String
+  emailId: String,
+  phoneNo: Number,
+  address: String
 });
 
 const User = mongoose.model("User", userSchema);
@@ -126,42 +128,63 @@ app.use(
   }),
 );
 
-app.get("/api/personalData", (req, res) => {
-  console.log("abcd");
-  res.json(personalData);
+// app.get("/api/personalData", (req, res) => {
+//   console.log("abcd");
+//   res.json(personalData);
+// });
+
+app.get("/api/personalData", async (req, res) => {
+  try {
+    const users = await User.find({});
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch users", details: err.message });
+  }
 });
 
-app.delete("/users/:id", (req, res) => {
-  const { id } = req.params;
-
-  // Delete from database
-  console.log(`Deleting user ${id}`);
-
-  personalData = personalData.filter((item) => item.id !== Number(id));
-
-  res.json({
-    success: true,
-    message: `User ${id} deleted`,
-  });
+app.delete("/users/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const result = await User.deleteOne({ _id: id });
+    
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
+    res.json({ success: true, message: `User deleted` });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to delete user", details: err.message });
+  }
 });
+
+// app.delete("/users/:id", (req, res) => {
+//   const { id } = req.params;
+
+//   // Delete from database
+//   console.log(`Deleting user ${id}`);
+
+//   personalData = personalData.filter((item) => item.id !== Number(id));
+
+//   res.json({
+//     success: true,
+//     message: `User ${id} deleted`,
+//   });
+// });
 
 app.post("/users/addUserData", (req, res) => {
   const newUser = req.body;
-  const updatedUser = {...newUser, id: personalData[personalData.length - 1].id + 1}
+  const updatedUser = {...newUser}
   console.log("newUser",newUser);
   console.log("updatedUser",updatedUser);
 
-  const user = new User({
-  name: "John",
-  email: "john@example.com"
-});
+  const user = new User(updatedUser);
 
  user.save();
 
-  personalData.push(updatedUser);
+  // personalData.push(updatedUser);
   res.json({
-    success: true,
-    data: personalData,
+    success: true
   });
 });
 

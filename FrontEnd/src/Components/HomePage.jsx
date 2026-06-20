@@ -124,6 +124,25 @@ const HomePage = ({ user, onLogout }) => {
         }
     };
 
+    const updateUser = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:8000/users/${id}`, {
+                method: 'UPDATE'
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update');
+            }
+
+            const data = await response.json();
+            getApiData();
+            console.log(data);
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     useEffect(() => {
         getApiData();
     }, [])
@@ -154,27 +173,27 @@ const HomePage = ({ user, onLogout }) => {
         }
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setApiData([...apiData, {
-            id: apiData[apiData.length - 1].id + 1,
-            name: formData.name,
-            emailId: formData.emailId,
-            phoneNo: formData.phoneNo,
-            address: formData.address
-        }]
-        );
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     setApiData([...apiData, {
+    //         id: apiData[apiData.length - 1].id + 1,
+    //         name: formData.name,
+    //         emailId: formData.emailId,
+    //         phoneNo: formData.phoneNo,
+    //         address: formData.address
+    //     }]
+    //     );
 
-        setFormData({
-            name: "",
-            emailId: "",
-            phoneNo: "",
-            address: ""
-        });
+    //     setFormData({
+    //         name: "",
+    //         emailId: "",
+    //         phoneNo: "",
+    //         address: ""
+    //     });
 
-        setShowtable(false);
-        setShowForm(false);
-    }
+    //     setShowtable(false);
+    //     setShowForm(false);
+    // }
 
     // const handleDelete =(id)=>{
     //     setApiData(previousdata => previousdata.filter(user => user.id !== id));
@@ -190,7 +209,6 @@ const HomePage = ({ user, onLogout }) => {
                         <table className="personal-data-table-container">
                             <thead>
                                 <tr>
-                                    <td> ID </td>
                                     <td> Name </td>
                                     <td> EmailId </td>
                                     <td> Phone </td>
@@ -200,13 +218,13 @@ const HomePage = ({ user, onLogout }) => {
                             </thead>
                             <tbody>
                                 {apiData.map((person) => (
-                                    <tr key={person?.id}>
-                                        <td>{person?.id}</td>
+                                    <tr key={person?._id}>
                                         <td>{person?.name}</td>
                                         <td>{person?.emailId}</td>
                                         <td>{person?.phoneNo}</td>
                                         <td>{person?.address}</td>
-                                        <button onClick={() => deleteUser(person?.id)}> Delete </button>
+                                        <button onClick={() => deleteUser(person?._id)}> Delete </button>
+                                        <button onClick={() => updateUser(person?._id)}> Update </button>
                                     </tr>
                                 ))}
                             </tbody>
